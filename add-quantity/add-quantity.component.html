@@ -1,0 +1,393 @@
+<ui5-button (click)="openDialog()">Button</ui5-button>
+<app-dialog
+	id="addGroupDialog"
+	[isDialogOpen]="isDialogOpen"
+	(onBeforeClose)="closeDialog()">
+	<div
+		slot="header"
+		class="w-full h-10">
+		<div class="pd-header pt-2">
+			<ui5-title
+				level="H5"
+				i18n
+				>Add Quantity
+			</ui5-title>
+			<ui5-label class="flex"> </ui5-label>
+		</div>
+	</div>
+
+	<div
+		class="grid grid-cols-7 h-full -ml-[2.97rem] -mr-[2.97rem] -mt-[0.97rem] -mb-[0.97rem] p-4">
+		<div class="h-[750px] grid col-span-3 grid-flow-col rounded-2xl">
+			<ui5-card
+				class="card-one col-span-1 grid gap-x-4 w-[23.01rem] h-[750px] rounded-2xl border border-solid border-gray-300">
+				<ui5-card-header
+					class="h-[2.95rem] flex items-center"
+					slot="header"
+					title-text="Order"></ui5-card-header>
+				<div class="h-px bg-gray-400 mb-[.1rem]"></div>
+				<div class="h-[] flex flex-wrap items-center ml-[1rem]">
+					<span *ngFor="let order of orderData; let i = index">
+						<ui5-button class="mr-2">{{ order.order_pos }}</ui5-button>
+					</span>
+					<ui5-button
+						icon="overflow"
+						*ngIf="orderData.length > 2"></ui5-button>
+				</div>
+
+				<div class="h-px mb-[.1rem] bg-gray-400"></div>
+
+				<div class="card-image h-[653px] overflow-auto ui5-content-native-scrollbars">
+					<ng-container>
+						<div
+							class="h-[100px]"
+							*ngFor="let item of itemOnOrderSelect">
+							<div class="h-[38px] mt-2">
+								<ui5-label
+									class="itemlabel font-bold text-base"
+									for="myInput"
+									i18n
+									show-colon
+									>Item Id</ui5-label
+								>
+								<span class="text font-bold text-base text-black">{{
+									item.custom_id
+								}}</span>
+							</div>
+
+							<div class="grid grid-flow-row h-[62px]">
+								<ui5-label
+									for="itemDesLabel"
+									class="mb-0 font-normal text-sm"
+									i18n
+									show-colon
+									>Item description</ui5-label
+								>
+								<div class="h-[44px]">
+									<ui5-input
+										class="font-normal text-sm text-black bg-gray-200"
+										id="iDesInput"
+										[readonly]="true"
+										[value]="item.name"></ui5-input>
+								</div>
+							</div>
+							<div>
+								<span
+									class="mt-2"
+									i18n
+									>Item Image:
+								</span>
+								<app-for-image
+									height="174px"
+									[headerTitle]=""
+									[item]="item"
+									[isCard]="false"
+									[isSingleImage]="true"
+									class="w-full h-full"></app-for-image>
+							</div>
+						</div>
+					</ng-container>
+				</div>
+
+				<div class="h-px bg-gray-400"></div>
+			</ui5-card>
+
+			<ui5-card
+				class="card-two grid col-span-2 rounded-2xl border border-solid border-gray-300 ml-2">
+				<div class="h-[50px] pl-4 flex items-center">
+					<ui5-title level="H5">Add Parts</ui5-title>
+				</div>
+
+				<div class="h-px bg-gray-400 mb-[.1rem]"></div>
+				<div class="h-[] flex flex-wrap items-center ml-[1rem]">
+					<span>
+						<ui5-button
+							class="mr-2"
+							(click)="showSerialView()"
+							>serial View</ui5-button
+						>
+					</span>
+					<span>
+						<ui5-button
+							class="mr-2"
+							(click)="showBatchView()"
+							>Batch View</ui5-button
+						>
+					</span>
+
+					<span>
+						<ui5-button
+							class="mr-2"
+							(click)="showDefaultView()"
+							>Default</ui5-button
+						>
+					</span>
+				</div>
+				<div class="h-px bg-gray-400 mb-[.1rem]"></div>
+				<div class="h[2rem] p-3">
+					<ui5-label
+						class="mr-2"
+						show-colon
+						>Batch Number</ui5-label
+					>
+					<ui5-input
+						class="font-normal text-sm text-black w-40"
+						id=""></ui5-input>
+				</div>
+				<div class="h-px bg-gray-400 mb-[.1rem]"></div>
+				<div
+					class="divOne"
+					*ngIf="showDivOne">
+					<div class="h-[92px] py-3 pl-4 pr-[2px]">
+						<div class="h-[38px]">
+							<ui5-title level="H5">Add Good Parts</ui5-title>
+						</div>
+						<div class="grid grid-flow-col grid-cols-3 h-11 items-center">
+							<ui5-radio-button name="myGroup"></ui5-radio-button>
+							<div class="grid">
+								<ui5-label show-colon>Add good parts</ui5-label>
+							</div>
+
+							<div
+								*ngIf="errorMessage"
+								class="error-message text-red-500">
+								{{ errorMessage }}
+							</div>
+						</div>
+					</div>
+
+					<div class="h-[92px] py-3 pl-4 pr-[2px]">
+						<ui5-title
+							class="mb-3"
+							level="H5"
+							i18n
+							>Add Scrap Parts</ui5-title
+						>
+						<div
+							class="grid grid-cols-3"
+							*ngFor="let scrpPart of badPartReasons; let i = index">
+							<ui5-radio-button name="myGroup"></ui5-radio-button>
+							<ui5-label class="items-center">{{ scrpPart.name }}:</ui5-label>
+							<!-- <ui5-input
+							id="scrapPartAmounts"
+							(ngModelChange)="checkScrapValidity()"
+							[(ngModel)]="scrapPartAmounts[i]"></ui5-input
+						> -->
+							<br />
+						</div>
+					</div>
+				</div>
+
+				<div
+					class="div-two"
+					*ngIf="showDivTwo">
+					<div class="h-[92px] py-3 pl-4 pr-[2px]">
+						<div class="h-[38px]">
+							<ui5-title level="H5">Add Good Parts</ui5-title>
+						</div>
+						<div class="grid grid-flow-col grid-cols-3 h-11 items-center">
+							<div class="grid col-span-1">
+								<ui5-label show-colon>Add good parts</ui5-label>
+							</div>
+							<div class="grid col-span-2">
+								<ui5-input
+									id="goodPartsInput"
+									[(ngModel)]="goodPartAmount"
+									(ngModelChange)="checkFormValidity()"></ui5-input>
+							</div>
+							<div
+								*ngIf="errorMessage"
+								class="error-message text-red-500">
+								{{ errorMessage }}
+							</div>
+						</div>
+					</div>
+
+					<div class="h-[92px] py-3 pl-4 pr-[2px]">
+						<ui5-title
+							class="mb-3"
+							level="H5"
+							i18n
+							>Add Scrap Parts</ui5-title
+						>
+						<div
+							class="grid grid-cols-3"
+							*ngFor="let scrpPart of badPartReasons; let i = index">
+							<ui5-label class="items-center col-span-1"
+								>{{ scrpPart.name }}:</ui5-label
+							>
+							<ui5-input
+								id="scrapPartAmounts"
+								(ngModelChange)="checkScrapValidity()"
+								[(ngModel)]="scrapPartAmounts[i]"></ui5-input
+							><br />
+						</div>
+					</div>
+				</div>
+				<div
+					class="div-three"
+					*ngIf="showDivThree">
+					<div class="h-[92px] py-3 pl-4 pr-[2px]">
+						<div class="h-[38px]">
+							<ui5-title level="H5">Add Good Parts</ui5-title>
+						</div>
+						<div class="grid grid-flow-col grid-cols-3 h-11 items-center">
+							<div class="grid col-span-1">
+								<ui5-label show-colon>Add good parts</ui5-label>
+							</div>
+							<div class="grid col-span-2">
+								<ui5-input
+									id="goodPartsInput"
+									[(ngModel)]="goodPartAmount"
+									(ngModelChange)="checkFormValidity()"></ui5-input>
+							</div>
+							<div
+								*ngIf="errorMessage"
+								class="error-message text-red-500">
+								{{ errorMessage }}
+							</div>
+						</div>
+					</div>
+
+					<div class="h-[92px] py-3 pl-4 pr-[2px]">
+						<ui5-title
+							class="mb-3"
+							level="H5"
+							i18n
+							>Add Scrap Parts</ui5-title
+						>
+						<div
+							class="grid grid-cols-3"
+							*ngFor="let scrpPart of badPartReasons; let i = index">
+							<ui5-label class="items-center col-span-1"
+								>{{ scrpPart.name }}:</ui5-label
+							>
+							<ui5-input
+								id="scrapPartAmounts"
+								(ngModelChange)="checkScrapValidity()"
+								[(ngModel)]="scrapPartAmounts[i]"></ui5-input
+							><br />
+						</div>
+					</div>
+				</div>
+			</ui5-card>
+		</div>
+
+		<div
+			class="grid col-span-4 ml-[1.02rem] h-[750px] rounded-2xl bg-blue-500 border border-solid border-gray-300">
+			<ui5-card class="card-three h-[750px] rounded-2xl grid">
+				<div class="h-[45rem]">
+					<app-grid-table
+						headerTitle="Quantity Recording"
+						[data]="quantityRecording"
+						[customData]="true"
+						[columns]="columns"
+						i18n-headerTitle=""
+						[showSearch]="false"
+						[showDownload]="false"
+						[showAction]="true"
+						i18n-addButtonText
+						button1Text="All"
+						button2Text="Inactive"
+						button3Text="Active"
+						selectionMode="None"
+						i18n-button1Text
+						[useOdataStyles]="false"
+						i18n-button2Text
+						i18n-button3Text
+						[showNewButton]="false"
+						(deleteClick)="deleteRecord($event)"
+						(editClick)="editClick($event)"
+						[showActiveButton]="false"
+						#childComponentRef>
+					</app-grid-table>
+				</div>
+			</ui5-card>
+		</div>
+	</div>
+
+	<div
+		slot="footer"
+		class="dialog-footer">
+		<ui5-button
+			[disabled]="!isFormValid"
+			class=""
+			id="saveBtn"
+			icon="sap-icon://save"
+			design="Emphasized"
+			i18n
+			(click)="onSave()">
+			save
+		</ui5-button>
+		<ui5-button
+			class="ml-2"
+			id="cancelBtn"
+			icon="sap-icon://decline"
+			(click)="closeDialog()"
+			i18n>
+			Close
+		</ui5-button>
+	</div>
+</app-dialog>
+<ui5-dialog
+	class="w-[27vw]"
+	[open]="EditItems">
+	<ui5-bar
+		slot="header"
+		design="Header">
+		<ui5-title
+			level="H5"
+			slot="startContent"
+			i18n
+			>Edit
+		</ui5-title>
+	</ui5-bar>
+	<div>
+		<div class="flex flex-col justify-center items-center">
+			<div class="mt-2.5">
+				<div class="grid grid-cols-2">
+					<ui5-label
+						class="items-center"
+						i18n
+						>Good Parts:
+					</ui5-label>
+					<ui5-input
+						class="w-full"
+						[(ngModel)]="editedGoodPartAmount"></ui5-input>
+				</div>
+				<div class="grid grid-cols-2">
+					<ui5-label
+						class="items-center"
+						i18n
+						>Scrap Parts:
+					</ui5-label>
+					<ui5-input
+						class="w-full"
+						[(ngModel)]="editedScrapPartAmount"></ui5-input>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div
+		slot="footer"
+		class="footer-style rounded-es-xl rounded-ee-xl">
+		<div class="flex flex-row-reverse">
+			<ui5-button
+				design="Transparent"
+				id="close-edit-dialog"
+				(click)="closeEditDialog()"
+				i18n
+				>Close</ui5-button
+			>
+			<ui5-button
+				id="save-edit"
+				class="mr-1"
+				design="Emphasized"
+				i18n
+				(click)="saveEdit()"
+				>Save</ui5-button
+			>
+		</div>
+	</div>
+</ui5-dialog>
